@@ -2,14 +2,13 @@
 # coding: utf-8
 
 import pandas as pd
-import numpy as np
 import re
 import math
 import nltk
+import codecs
 import pymorphy2
 import numpy as np
 from collections import Counter
-from nltk.corpus import stopwords
 from nltk import SnowballStemmer
 from sklearn.feature_extraction.text import CountVectorizer
 # Gensim
@@ -19,7 +18,7 @@ from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
 # Plots
 import pyLDAvis
-import pyLDAvis.gensim  # don't skip this
+import pyLDAvis.gensim 
                                                      
 df = get_dataframe()
 #nltk.download('punkt')
@@ -74,7 +73,17 @@ for i in range(df1.shape[0]):
 df1['Combined'] = df1['Combined'].astype(str)
 
 stop_words = set(stopwords.words("english"))
-stop_words1 = set(stopwords.words("russian"))
+stop_words1 = set(stopwords.words("russian"))with open('english_new.txt') as fe:
+    stop_words = []
+    for line in fe:
+        new_line = re.sub(r'\s*\n','',line)
+        stop_words.append(new_line)
+
+with codecs.open('russian_new.txt', encoding='utf-8') as fr:
+    stop_words1 = []
+    for line in fr:
+        new_line = re.sub(r'\s*\n','',line)
+        stop_words1.append(new_line)
 
 df1['Combined'] = df1['Combined'].str.split(' ').apply(lambda x: ' '.join(k for k in x if k not in stop_words))
 df1['Combined'] = df1['Combined'].str.split(' ').apply(lambda x: ' '.join(k for k in x if k not in stop_words1))
@@ -90,9 +99,6 @@ df1['Combined'] = df1['Combined'].str.split(' ').apply(lambda x: ' '.join(stemme
 
 for i in range(df1.shape[0]):
     df1['Combined'][i]=str(clean_tweet(df1['Combined'][i]))
-
-stop_words = set(stopwords.words("english"))
-stop_words1 = set(stopwords.words("russian"))
 
 df1['Combined'] = df1['Combined'].str.split(' ').apply(lambda x: ' '.join(k for k in x if k not in stop_words))
 df1['Combined'] = df1['Combined'].str.split(' ').apply(lambda x: ' '.join(k for k in x if k not in stop_words1))
@@ -147,7 +153,7 @@ from gensim.models import LdaModel, LdaMulticore
 lda_model = LdaMulticore(corpus=corpus,
                          id2word=dct,
                          random_state=100,
-                         num_topics=18,
+                         num_topics=17,
                          passes=10,
                          chunksize=1000,
                          batch=False,
