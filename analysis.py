@@ -153,7 +153,7 @@ from gensim.models import LdaModel, LdaMulticore
 lda_model = LdaMulticore(corpus=corpus,
                          id2word=dct,
                          random_state=100,
-                         num_topics=17,
+                         num_topics=15,
                          passes=10,
                          chunksize=1000,
                          batch=False,
